@@ -1,0 +1,25 @@
+{
+	"name": "sourceAvailability_Dataset",
+	"properties": {
+		"description": "Dataset to check if '_success' flag/ file is available in source. ",
+		"linkedServiceName": {
+			"referenceName": "sourceBlob_LS",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"fileName": "_success",
+			"folderPath": "data/source"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
