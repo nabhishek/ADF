@@ -1,0 +1,109 @@
+{
+	"name": "ETL with Azure Databricks",
+	"properties": {
+		"activities": [
+			{
+				"name": "Availability flag",
+				"description": "Lookup (or Get Metadata) activity is used to get information about the source files if they are available for processing. \nIn this template, only when the '_success' flag/ file is available at source, would the downstream activities be triggered. ",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"dataset": {
+						"referenceName": "sourceAvailability_Dataset",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "file-to-blob",
+				"description": "Copy activity copies the actual files/ dataset to be processed by Databricks into a staging store. This storage should be accessible by the Azure Databricks cluster referenced in the next activity. ",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Availability flag",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0
+				},
+				"inputs": [
+					{
+						"referenceName": "sourceFiles_Dataset",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sinkRawFiles_Dataset",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ETL",
+				"description": "Databricks Notebook activity does the processing of the data copied in the previous step (copy activity). ",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "file-to-blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/adftutorial/Transformations (update)",
+					"baseParameters": {
+						"input": "/staged_sink",
+						"output": "/processed_sink",
+						"filename": "Product.csv",
+						"pipelineRunId": {
+							"value": "@pipeline().RunId",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_LS",
+					"type": "LinkedServiceReference"
+				}
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
