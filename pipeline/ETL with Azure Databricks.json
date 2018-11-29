@@ -88,7 +88,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/adftutorial/Transformations (update)",
+					"notebookPath": "/Shared/Transformations",
 					"baseParameters": {
 						"input": "/staged_sink",
 						"output": "/processed_sink",
