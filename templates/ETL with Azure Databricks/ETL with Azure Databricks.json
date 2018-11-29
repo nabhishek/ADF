@@ -25,6 +25,7 @@
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Run a simple ETL job using Azure Databricks, with a single pane of glass monitoring from ADF.\n\nIn the template, we check for source dataset availability. Once it is available we copy it into a blob storage for staging using a Copy activity. The same storage is accessed from Databricks clusters while processing the data (ETL). The output is stored in the same storage under 'output' folder. Various notebook properties are referenced as expressions using pipeline parameters, which lets you configure more generic and reusable pipelines. \n \nFor steps on setting up storage and databricks notebook refer https://aka.ms/databricks-instructions. ",
 				"activities": [
 					{
 						"name": "Availability flag",
@@ -93,7 +94,7 @@
 					},
 					{
 						"name": "ETL",
-						"description": "Databricks Notebook activity does the processing of the data copied in the previous step (copy activity). ",
+						"description": "Databricks Notebook activity does the processing of the data copied in the previous step (copy activity).  Please ensure you have added the databricks notebook (https://adflabstaging1.blob.core.windows.net/share/Transformations.html) in the databricks work-space and referenced it in the notebook activity in ADF.",
 						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
@@ -111,11 +112,20 @@
 							"secureInput": false
 						},
 						"typeProperties": {
-							"notebookPath": "/adftutorial/Transformations (update)",
+							"notebookPath": "/Shared/Transformations",
 							"baseParameters": {
-								"input": "/staged_sink",
-								"output": "/processed_sink",
-								"filename": "Product.csv",
+								"input": {
+									"value": "@pipeline().parameters.inputPath",
+									"type": "Expression"
+								},
+								"output": {
+									"value": "@pipeline().parameters.outputPath",
+									"type": "Expression"
+								},
+								"filename": {
+									"value": "@pipeline().parameters.fileName",
+									"type": "Expression"
+								},
 								"pipelineRunId": {
 									"value": "@pipeline().RunId",
 									"type": "Expression"
@@ -127,7 +137,21 @@
 							"type": "LinkedServiceReference"
 						}
 					}
-				]
+				],
+				"parameters": {
+					"inputPath": {
+						"type": "String",
+						"defaultValue": "/staged_sink"
+					},
+					"outputPath": {
+						"type": "String",
+						"defaultValue": "/processed_sink"
+					},
+					"fileName": {
+						"type": "String",
+						"defaultValue": "Product.csv"
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sourceAvailability_Dataset')]",
@@ -140,7 +164,7 @@
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Dataset to check if '_success' flag/ file is available in source. ",
+				"description": "Dataset to check if '_success' flag/ file is available in source. If not, then the activity fails, letting you know that source dataset is not ready.\n\nAction: Please create dsdsdsdsdsdfsdfsdf\n\nContext: In Spark/ Hadoop environments, generally users leverage flags to identify if the data has been correctly written through the distributed compute engines. E.g. '_success' defines all nodes have successfully written the data.",
 				"linkedServiceName": {
 					"referenceName": "[parameters('sourceBlob_LS')]",
 					"type": "LinkedServiceReference"
