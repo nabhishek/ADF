@@ -6,38 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory Name",
 			"defaultValue": "demo-lab-abnarain"
-		},
-		"AzureDatabricks_LS_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
-		},
-		"sinkBlob_LS_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
-		},
-		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"sinkRawFiles_Dataset_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "sinkdata/staged_sink"
-		},
-		"sourceAvailability_Dataset_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "_success"
-		},
-		"sourceAvailability_Dataset_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "data/source"
-		},
-		"sourceFiles_Dataset_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "Product.csv"
-		},
-		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "data/source"
 		}
 	},
 	"variables": {
@@ -55,7 +23,6 @@
 						"name": "Availability flag",
 						"description": "Lookup (or Get Metadata) activity is used to get information about the source files if they are available for processing. \nIn this template, only when the '_success' flag/ file is available at source, would the downstream activities be triggered. ",
 						"type": "Lookup",
-						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -63,7 +30,6 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "BlobSource",
@@ -71,8 +37,7 @@
 							},
 							"dataset": {
 								"referenceName": "sourceAvailability_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						}
 					},
@@ -95,7 +60,6 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "BlobSource",
@@ -110,15 +74,13 @@
 						"inputs": [
 							{
 								"referenceName": "sourceFiles_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "sinkRawFiles_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					},
@@ -141,7 +103,6 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [],
 						"typeProperties": {
 							"notebookPath": "/Shared/Transformations",
 							"baseParameters": {
@@ -159,35 +120,10 @@
 							"type": "LinkedServiceReference"
 						}
 					}
-				],
-				"annotations": []
+				]
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sourceAvailability_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/sourceFiles_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/sinkRawFiles_Dataset')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sinkRawFiles_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset representing files that are copied into the sink/ destination storage. ",
-				"linkedServiceName": {
-					"referenceName": "sinkBlob_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"fileName": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sinkBlob_LS')]"
+				"[concat(variables('factoryId'), '/datasets/sourceAvailability_Dataset')]"
 			]
 		},
 		{
@@ -200,7 +136,6 @@
 					"referenceName": "sourceBlob_LS",
 					"type": "LinkedServiceReference"
 				},
-				"annotations": [],
 				"type": "AzureBlob",
 				"typeProperties": {
 					"format": {
@@ -212,80 +147,10 @@
 						"skipLineCount": 0,
 						"firstRowAsHeader": false
 					},
-					"fileName": "[parameters('sourceAvailability_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sourceAvailability_Dataset_properties_typeProperties_folderPath')]"
+					"fileName": "_success",
+					"folderPath": "data/source"
 				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sourceFiles_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset pointing to the actual data files in source.",
-				"linkedServiceName": {
-					"referenceName": "sourceBlob_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"fileName": "[parameters('sourceFiles_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sourceFiles_Dataset_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Linked service to connect  the Azure Databricks workspace. Please modify the properties as required.  ",
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://eastus.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
-					},
-					"existingClusterId": "0320-025440-yes123"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sinkBlob_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('sinkBlob_LS_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sourceBlob_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Source Azure Blob storage account where the source files are.  ",
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"sasUri": "**********?**********"
-				}
-			},
-			"dependsOn": []
+			}
 		}
 	]
 }
