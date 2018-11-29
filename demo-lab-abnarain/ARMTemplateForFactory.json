@@ -145,9 +145,18 @@
 						"typeProperties": {
 							"notebookPath": "/Shared/Transformations",
 							"baseParameters": {
-								"input": "/staged_sink",
-								"output": "/processed_sink",
-								"filename": "Product.csv",
+								"input": {
+									"value": "@pipeline().parameters.inputPath",
+									"type": "Expression"
+								},
+								"output": {
+									"value": "@pipeline().parameters.outputPath",
+									"type": "Expression"
+								},
+								"filename": {
+									"value": "@pipeline().parameters.fileName",
+									"type": "Expression"
+								},
 								"pipelineRunId": {
 									"value": "@pipeline().RunId",
 									"type": "Expression"
@@ -160,6 +169,20 @@
 						}
 					}
 				],
+				"parameters": {
+					"inputPath": {
+						"type": "String",
+						"defaultValue": "/staged_sink"
+					},
+					"outputPath": {
+						"type": "String",
+						"defaultValue": "/processed_sink"
+					},
+					"fileName": {
+						"type": "String",
+						"defaultValue": "Product.csv"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
