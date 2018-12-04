@@ -12,6 +12,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"typeProperties": {
+					"rootPath": "adftutorial/spark/script",
+					"entryFilePath": "WordCount_Spark.py",
+					"sparkJobLinkedService": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					}
+				},
 				"linkedServiceName": {
 					"referenceName": "hdiOnDemand_ls",
 					"type": "LinkedServiceReference"
