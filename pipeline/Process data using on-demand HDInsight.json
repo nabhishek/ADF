@@ -1,3 +1,22 @@
 {
-	"name": "Process data using on-demand HDInsight"
+	"name": "Process data using on-demand HDInsight",
+	"properties": {
+		"activities": [
+			{
+				"name": "processData",
+				"type": "HDInsightSpark",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"linkedServiceName": {
+					"referenceName": "hdiOnDemand_ls",
+					"type": "LinkedServiceReference"
+				}
+			}
+		]
+	}
 }
