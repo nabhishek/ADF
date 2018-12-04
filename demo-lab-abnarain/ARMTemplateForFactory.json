@@ -11,6 +11,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
 		},
+		"hdiOnDemand_ls_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_ls_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_ls_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_storage_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
+		},
 		"sinkBlob_LS_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
@@ -38,6 +54,22 @@
 		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "data/source"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "hdi-ondemand-rg"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "9f2d5c32-a9ff-4d84-a60e-a585b275ee0f"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		}
 	},
 	"variables": {
@@ -193,6 +225,45 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Process data using on-demand HDInsight')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "processData",
+						"type": "HDInsightSpark",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"rootPath": "adftutorial/spark/script",
+							"entryFilePath": "WordCount_Spark.py",
+							"sparkJobLinkedService": {
+								"referenceName": "hdiOnDemand_storage_ls",
+								"type": "LinkedServiceReference"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "hdiOnDemand_ls",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_ls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sinkRawFiles_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -279,6 +350,68 @@
 						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
 					},
 					"existingClusterId": "0320-025440-yes123"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "spark",
+					"clusterSize": 1,
+					"timeToLive": "00:05:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('hdiOnDemand_ls_properties_typeProperties_servicePrincipalId')]",
+					"tenant": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "ondemand-cluster",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_clusterSshPassword')]"
+					},
+					"sparkVersion": "",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
+					},
+					"additionalLinkedServiceNames": [
+						{
+							"referenceName": "hdiOnDemand_storage_ls",
+							"type": "LinkedServiceReference"
+						}
+					],
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_storage_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('hdiOnDemand_storage_ls_connectionString')]"
 				}
 			},
 			"dependsOn": []

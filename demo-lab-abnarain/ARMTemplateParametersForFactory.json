@@ -8,6 +8,18 @@
 		"AzureDatabricks_LS_accessToken": {
 			"value": ""
 		},
+		"hdiOnDemand_ls_clusterPassword": {
+			"value": ""
+		},
+		"hdiOnDemand_ls_clusterSshPassword": {
+			"value": ""
+		},
+		"hdiOnDemand_ls_servicePrincipalKey": {
+			"value": ""
+		},
+		"hdiOnDemand_storage_ls_connectionString": {
+			"value": ""
+		},
 		"sinkBlob_LS_connectionString": {
 			"value": ""
 		},
@@ -28,6 +40,18 @@
 		},
 		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
 			"value": "data/source"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
+			"value": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup": {
+			"value": "hdi-ondemand-rg"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_servicePrincipalId": {
+			"value": "9f2d5c32-a9ff-4d84-a60e-a585b275ee0f"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		}
 	}
 }
