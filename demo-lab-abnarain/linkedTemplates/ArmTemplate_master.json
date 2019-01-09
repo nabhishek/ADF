@@ -1,0 +1,154 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "demo-lab-abnarain"
+		},
+		"AzureDatabricks_LS_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
+		},
+		"hdiOnDemand_ls_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_ls_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_ls_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'hdiOnDemand_ls'"
+		},
+		"hdiOnDemand_storage_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
+		},
+		"sinkBlob_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
+		},
+		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"sinkRawFiles_Dataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "sinkdata/staged_sink"
+		},
+		"sourceAvailability_Dataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "_success"
+		},
+		"sourceAvailability_Dataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "data/source"
+		},
+		"sourceFiles_Dataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "Product.csv"
+		},
+		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "data/source"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "hdi-ondemand-rg"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "9f2d5c32-a9ff-4d84-a60e-a585b275ee0f"
+		},
+		"hdiOnDemand_ls_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas Token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDatabricks_LS_accessToken": {
+						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
+					},
+					"hdiOnDemand_storage_ls_connectionString": {
+						"value": "[parameters('hdiOnDemand_storage_ls_connectionString')]"
+					},
+					"sinkBlob_LS_connectionString": {
+						"value": "[parameters('sinkBlob_LS_connectionString')]"
+					},
+					"hdiOnDemand_ls_clusterPassword": {
+						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
+					},
+					"hdiOnDemand_ls_clusterSshPassword": {
+						"value": "[parameters('hdiOnDemand_ls_clusterSshPassword')]"
+					},
+					"hdiOnDemand_ls_servicePrincipalKey": {
+						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
+					},
+					"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
+						"value": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]"
+					},
+					"sinkRawFiles_Dataset_properties_typeProperties_folderPath": {
+						"value": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_folderPath')]"
+					},
+					"sourceAvailability_Dataset_properties_typeProperties_fileName": {
+						"value": "[parameters('sourceAvailability_Dataset_properties_typeProperties_fileName')]"
+					},
+					"sourceAvailability_Dataset_properties_typeProperties_folderPath": {
+						"value": "[parameters('sourceAvailability_Dataset_properties_typeProperties_folderPath')]"
+					},
+					"sourceFiles_Dataset_properties_typeProperties_fileName": {
+						"value": "[parameters('sourceFiles_Dataset_properties_typeProperties_fileName')]"
+					},
+					"sourceFiles_Dataset_properties_typeProperties_folderPath": {
+						"value": "[parameters('sourceFiles_Dataset_properties_typeProperties_folderPath')]"
+					},
+					"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
+						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId')]"
+					},
+					"hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup": {
+						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup')]"
+					},
+					"hdiOnDemand_ls_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_servicePrincipalId')]"
+					},
+					"hdiOnDemand_ls_properties_typeProperties_tenant": {
+						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

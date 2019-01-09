@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
 		},
+		"hdiOnDemand_storage_ls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
+		},
+		"sinkBlob_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
+		},
 		"hdiOnDemand_ls_clusterPassword": {
 			"type": "secureString",
 			"metadata": "Secure string for 'clusterPassword' of 'hdiOnDemand_ls'"
@@ -22,14 +30,6 @@
 		"hdiOnDemand_ls_servicePrincipalKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'hdiOnDemand_ls'"
-		},
-		"hdiOnDemand_storage_ls_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
-		},
-		"sinkBlob_LS_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
@@ -76,6 +76,186 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Linked service to connect  the Azure Databricks workspace. Please modify the properties as required.  ",
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://eastus.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
+					},
+					"existingClusterId": "0320-025440-yes123"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_storage_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('hdiOnDemand_storage_ls_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sinkBlob_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('sinkBlob_LS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourceBlob_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Source Azure Blob storage account where the source files are.  ",
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"sasUri": "**********?**********"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sinkRawFiles_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Dataset representing files that are copied into the sink/ destination storage. ",
+				"linkedServiceName": {
+					"referenceName": "sinkBlob_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"fileName": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sinkBlob_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourceAvailability_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Dataset to check if '_success' flag/ file is available in source. If not, then the activity fails, letting you know that source dataset is not ready.\n\nAction: Please create dsdsdsdsdsdfsdfsdf\n\nContext: In Spark/ Hadoop environments, generally users leverage flags to identify if the data has been correctly written through the distributed compute engines. E.g. '_success' defines all nodes have successfully written the data.",
+				"linkedServiceName": {
+					"referenceName": "sourceBlob_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": "[parameters('sourceAvailability_Dataset_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('sourceAvailability_Dataset_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourceFiles_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Dataset pointing to the actual data files in source.",
+				"linkedServiceName": {
+					"referenceName": "sourceBlob_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"fileName": "[parameters('sourceFiles_Dataset_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('sourceFiles_Dataset_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "spark",
+					"clusterSize": 1,
+					"timeToLive": "00:05:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('hdiOnDemand_ls_properties_typeProperties_servicePrincipalId')]",
+					"tenant": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "ondemand-cluster",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_clusterSshPassword')]"
+					},
+					"sparkVersion": "",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
+					},
+					"additionalLinkedServiceNames": [
+						{
+							"referenceName": "hdiOnDemand_storage_ls",
+							"type": "LinkedServiceReference"
+						}
+					],
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ETL with Azure Databricks')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -263,186 +443,6 @@
 				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
 				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_ls')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sinkRawFiles_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset representing files that are copied into the sink/ destination storage. ",
-				"linkedServiceName": {
-					"referenceName": "sinkBlob_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"fileName": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sinkBlob_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sourceAvailability_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset to check if '_success' flag/ file is available in source. If not, then the activity fails, letting you know that source dataset is not ready.\n\nAction: Please create dsdsdsdsdsdfsdfsdf\n\nContext: In Spark/ Hadoop environments, generally users leverage flags to identify if the data has been correctly written through the distributed compute engines. E.g. '_success' defines all nodes have successfully written the data.",
-				"linkedServiceName": {
-					"referenceName": "sourceBlob_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"fileName": "[parameters('sourceAvailability_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sourceAvailability_Dataset_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sourceFiles_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset pointing to the actual data files in source.",
-				"linkedServiceName": {
-					"referenceName": "sourceBlob_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"fileName": "[parameters('sourceFiles_Dataset_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('sourceFiles_Dataset_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Linked service to connect  the Azure Databricks workspace. Please modify the properties as required.  ",
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://eastus.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
-					},
-					"existingClusterId": "0320-025440-yes123"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_ls')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "HDInsightOnDemand",
-				"typeProperties": {
-					"clusterType": "spark",
-					"clusterSize": 1,
-					"timeToLive": "00:05:00",
-					"version": "3.6",
-					"hostSubscriptionId": "[parameters('hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId')]",
-					"clusterResourceGroup": "[parameters('hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup')]",
-					"servicePrincipalId": "[parameters('hdiOnDemand_ls_properties_typeProperties_servicePrincipalId')]",
-					"tenant": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]",
-					"clusterNamePrefix": "ondemand-cluster",
-					"clusterPassword": {
-						"type": "SecureString",
-						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
-					},
-					"clusterSshPassword": {
-						"type": "SecureString",
-						"value": "[parameters('hdiOnDemand_ls_clusterSshPassword')]"
-					},
-					"sparkVersion": "",
-					"servicePrincipalKey": {
-						"type": "SecureString",
-						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
-					},
-					"additionalLinkedServiceNames": [
-						{
-							"referenceName": "hdiOnDemand_storage_ls",
-							"type": "LinkedServiceReference"
-						}
-					],
-					"linkedServiceName": {
-						"referenceName": "hdiOnDemand_storage_ls",
-						"type": "LinkedServiceReference"
-					},
-					"headNodeSize": "",
-					"dataNodeSize": "",
-					"zookeeperNodeSize": ""
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/hdiOnDemand_storage_ls')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('hdiOnDemand_storage_ls_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sinkBlob_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('sinkBlob_LS_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sourceBlob_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Source Azure Blob storage account where the source files are.  ",
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"sasUri": "**********?**********"
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }
