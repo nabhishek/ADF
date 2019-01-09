@@ -15,7 +15,7 @@
 				"typeProperties": {
 					"rootPath": "adftutorial/spark/script",
 					"entryFilePath": "WordCount_Spark.py",
-					"getDebugInfo": "Failure",
+					"getDebugInfo": "Always",
 					"sparkJobLinkedService": {
 						"referenceName": "hdiOnDemand_storage_ls",
 						"type": "LinkedServiceReference"
