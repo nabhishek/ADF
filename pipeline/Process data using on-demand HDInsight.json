@@ -15,6 +15,9 @@
 				"typeProperties": {
 					"rootPath": "adftutorial/spark/script",
 					"entryFilePath": "WordCount_Spark.py",
+					"arguments": [
+						"@pipeline().RunId"
+					],
 					"getDebugInfo": "Always",
 					"sparkConfig": {
 						"runid": {
