@@ -508,8 +508,9 @@
 							"rootPath": "adftutorial/spark/script",
 							"entryFilePath": "WordCount_Spark.py",
 							"arguments": [
-								"@pipeline().RunId"
+								"@concat('--runid ',pipeline().RunId)"
 							],
+							"getDebugInfo": "Always",
 							"sparkJobLinkedService": {
 								"referenceName": "hdiOnDemand_storage_ls",
 								"type": "LinkedServiceReference"
@@ -524,8 +525,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/linkedService_hdinsightBYOC')]",
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
+				"[concat(variables('factoryId'), '/linkedServices/linkedService_hdinsightBYOC')]"
 			]
 		}
 	]

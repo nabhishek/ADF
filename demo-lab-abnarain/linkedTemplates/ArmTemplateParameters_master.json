@@ -20,10 +20,10 @@
 		"hdiOnDemand_storage_ls_connectionString": {
 			"value": ""
 		},
-		"sinkBlob_LS_connectionString": {
+		"linkedService_hdinsightBYOC_password": {
 			"value": ""
 		},
-		"linkedService_hdinsightBYOC_password": {
+		"sinkBlob_LS_connectionString": {
 			"value": ""
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {

@@ -27,13 +27,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
 		},
-		"sinkBlob_LS_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
-		},
 		"linkedService_hdinsightBYOC_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
+		},
+		"sinkBlob_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
