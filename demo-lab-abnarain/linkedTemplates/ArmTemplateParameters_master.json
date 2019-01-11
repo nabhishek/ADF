@@ -23,6 +23,9 @@
 		"sinkBlob_LS_connectionString": {
 			"value": ""
 		},
+		"linkedService_hdinsightBYOC_password": {
+			"value": ""
+		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"value": ""
 		},
@@ -52,6 +55,9 @@
 		},
 		"hdiOnDemand_ls_properties_typeProperties_tenant": {
 			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
+			"value": "admin"
 		}
 	}
 }

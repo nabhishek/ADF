@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
+		"linkedService_hdinsightBYOC_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
+		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": ""
@@ -70,6 +74,10 @@
 		"hdiOnDemand_ls_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin"
 		},
 		"containerUri": {
 			"type": "string",
@@ -116,6 +124,9 @@
 					"hdiOnDemand_ls_servicePrincipalKey": {
 						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
 					},
+					"linkedService_hdinsightBYOC_password": {
+						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
+					},
 					"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 						"value": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]"
 					},
@@ -145,6 +156,9 @@
 					},
 					"hdiOnDemand_ls_properties_typeProperties_tenant": {
 						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]"
+					},
+					"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
+						"value": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]"
 					}
 				}
 			},

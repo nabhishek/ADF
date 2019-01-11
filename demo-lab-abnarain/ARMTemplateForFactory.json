@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
+		"linkedService_hdinsightBYOC_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
+		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": ""
@@ -70,6 +74,10 @@
 		"hdiOnDemand_ls_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin"
 		}
 	},
 	"variables": {
@@ -245,6 +253,9 @@
 						"typeProperties": {
 							"rootPath": "adftutorial/spark/script",
 							"entryFilePath": "WordCount_Spark.py",
+							"arguments": [
+								"@pipeline().RunId"
+							],
 							"getDebugInfo": "Always",
 							"sparkConfig": {
 								"runid": {
@@ -449,6 +460,73 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Spark1",
+						"type": "HDInsightSpark",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"rootPath": "adftutorial/spark/script",
+							"entryFilePath": "WordCount_Spark.py",
+							"arguments": [
+								"@pipeline().RunId"
+							],
+							"sparkJobLinkedService": {
+								"referenceName": "hdiOnDemand_storage_ls",
+								"type": "LinkedServiceReference"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "linkedService_hdinsightBYOC",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/linkedService_hdinsightBYOC')]",
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedService_hdinsightBYOC')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsight",
+				"typeProperties": {
+					"clusterUri": "https://abnarain-byoc.azurehdinsight.net",
+					"userName": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
+					},
+					"isEspEnabled": false,
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
 		}
 	]
 }
