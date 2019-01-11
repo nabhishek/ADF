@@ -16,6 +16,12 @@
 					"rootPath": "adftutorial/spark/script",
 					"entryFilePath": "WordCount_Spark.py",
 					"getDebugInfo": "Always",
+					"sparkConfig": {
+						"runid": {
+							"value": "@pipeline().RunId",
+							"type": "Expression"
+						}
+					},
 					"sparkJobLinkedService": {
 						"referenceName": "hdiOnDemand_storage_ls",
 						"type": "LinkedServiceReference"
