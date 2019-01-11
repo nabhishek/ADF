@@ -237,9 +237,11 @@
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "A simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
 				"activities": [
 					{
 						"name": "processData",
+						"description": "PySpark application for counting words in a document.",
 						"type": "HDInsightSpark",
 						"dependsOn": [],
 						"policy": {
@@ -420,6 +422,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "On-demand HDInsight cluster created by ADF for the PySpark application execution. Please ensure you configure an appropriate AAD service principal. In this example, use the same storage account for both on-demand HDI and the resource files for simplicity.",
 				"annotations": [],
 				"type": "HDInsightOnDemand",
 				"typeProperties": {
@@ -431,7 +434,7 @@
 					"clusterResourceGroup": "[parameters('hdiOnDemand_ls_properties_typeProperties_clusterResourceGroup')]",
 					"servicePrincipalId": "[parameters('hdiOnDemand_ls_properties_typeProperties_servicePrincipalId')]",
 					"tenant": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]",
-					"clusterNamePrefix": "ondemand-cluster",
+					"clusterNamePrefix": "ondemand-cluster-",
 					"clusterPassword": {
 						"type": "SecureString",
 						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
@@ -469,6 +472,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Use the same storage account for storing the resource files (scripts, input file) and for creating the HDI on-demand cluster.",
 				"annotations": [],
 				"type": "AzureBlobStorage",
 				"typeProperties": {
