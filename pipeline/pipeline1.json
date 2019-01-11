@@ -16,7 +16,7 @@
 					"rootPath": "adftutorial/spark/script",
 					"entryFilePath": "WordCount_Spark2.py",
 					"arguments": [
-						"@concat('--runid ', pipeline().RunId)"
+						"@pipeline().RunId"
 					],
 					"getDebugInfo": "Always",
 					"sparkJobLinkedService": {
