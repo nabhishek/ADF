@@ -1,5 +1,5 @@
 {
-	"name": "Process data using on-demand HDInsight",
+	"name": "Transform data using on-demand HDInsight",
 	"properties": {
 		"description": "Use the template to create a simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
 		"activities": [
@@ -33,7 +33,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "hdiOnDemand_ls",
+					"referenceName": "OnDemandHDInsightConnection",
 					"type": "LinkedServiceReference"
 				}
 			}
