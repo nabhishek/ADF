@@ -31,9 +31,37 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'hdiOnDemand_ls'"
 		},
+		"linkedService1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService1'"
+		},
+		"linkedService2_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'linkedService2'"
+		},
+		"linkedService2_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'linkedService2'"
+		},
+		"linkedService2_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'linkedService2'"
+		},
 		"linkedService_hdinsightBYOC_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
+		},
+		"OnDemandHDInsightConnection_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
@@ -75,9 +103,53 @@
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
+		"linkedService1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "asA"
+		},
+		"linkedService2_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"linkedService2_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "ADF-BOT"
+		},
+		"linkedService2_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "ewr"
+		},
+		"linkedService2_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService2_properties_typeProperties_clusterUserName": {
+			"type": "string",
+			"defaultValue": "wewe"
+		},
+		"linkedService2_properties_typeProperties_clusterSshUserName": {
+			"type": "string",
+			"defaultValue": "as"
+		},
 		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "admin"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "dsf"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		}
 	},
 	"variables": {
@@ -267,6 +339,87 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsight",
+				"typeProperties": {
+					"clusterUri": "https://sparkdemo.azurehdinsight.net",
+					"userName": "[parameters('linkedService1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService1_password')]"
+					},
+					"isEspEnabled": true,
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedService2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "hadoop",
+					"clusterSize": 4,
+					"timeToLive": "00:05:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('linkedService2_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('linkedService2_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('linkedService2_properties_typeProperties_servicePrincipalId')]",
+					"osType": "Linux",
+					"tenant": "[parameters('linkedService2_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "",
+					"clusterUserName": "[parameters('linkedService2_properties_typeProperties_clusterUserName')]",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService2_clusterPassword')]"
+					},
+					"clusterSshUserName": "[parameters('linkedService2_properties_typeProperties_clusterSshUserName')]",
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService2_clusterSshPassword')]"
+					},
+					"scriptActions": [
+						{
+							"name": "name",
+							"uri": "https://uri",
+							"parameters": "param",
+							"roles": [
+								"headnode",
+								"workernode"
+							]
+						}
+					],
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService2_servicePrincipalKey')]"
+					},
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/linkedService_hdinsightBYOC')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -285,6 +438,49 @@
 						"referenceName": "hdiOnDemand_storage_ls",
 						"type": "LinkedServiceReference"
 					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnDemandHDInsightConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "On-demand HDInsight cluster created by ADF for the PySpark application execution. Please ensure you configure an appropriate AAD service principal. In this example, use the same storage account for both on-demand HDI and the resource files for simplicity.",
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "hadoop",
+					"clusterSize": 4,
+					"timeToLive": "00:05:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]",
+					"tenant": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
+					},
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
+					},
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": ""
 				}
 			},
 			"dependsOn": [
@@ -440,14 +636,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Process data using on-demand HDInsight')]",
+			"name": "[concat(parameters('factoryName'), '/Transform data using on-demand HDInsight')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "A simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
+				"description": "Use the template to create a simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
 				"activities": [
 					{
-						"name": "processData",
+						"name": "ProcessData",
 						"description": "PySpark application for counting words in a document.",
 						"type": "HDInsightSpark",
 						"dependsOn": [],
@@ -478,7 +674,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "hdiOnDemand_ls",
+							"referenceName": "OnDemandHDInsightConnection",
 							"type": "LinkedServiceReference"
 						}
 					}
@@ -487,7 +683,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_ls')]"
+				"[concat(variables('factoryId'), '/linkedServices/OnDemandHDInsightConnection')]"
 			]
 		},
 		{

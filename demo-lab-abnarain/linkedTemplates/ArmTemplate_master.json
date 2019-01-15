@@ -27,6 +27,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'hdiOnDemand_storage_ls'"
 		},
+		"linkedService1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService1'"
+		},
+		"linkedService2_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'linkedService2'"
+		},
+		"linkedService2_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'linkedService2'"
+		},
+		"linkedService2_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'linkedService2'"
+		},
 		"linkedService_hdinsightBYOC_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
@@ -34,6 +50,18 @@
 		"sinkBlob_LS_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
+		},
+		"OnDemandHDInsightConnection_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
@@ -75,9 +103,53 @@
 			"type": "string",
 			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
+		"linkedService1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "asA"
+		},
+		"linkedService2_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"linkedService2_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "ADF-BOT"
+		},
+		"linkedService2_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "ewr"
+		},
+		"linkedService2_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService2_properties_typeProperties_clusterUserName": {
+			"type": "string",
+			"defaultValue": "wewe"
+		},
+		"linkedService2_properties_typeProperties_clusterSshUserName": {
+			"type": "string",
+			"defaultValue": "as"
+		},
 		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "admin"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "dsf"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
 		"containerUri": {
 			"type": "string",
@@ -124,8 +196,29 @@
 					"hdiOnDemand_ls_servicePrincipalKey": {
 						"value": "[parameters('hdiOnDemand_ls_servicePrincipalKey')]"
 					},
+					"linkedService1_password": {
+						"value": "[parameters('linkedService1_password')]"
+					},
+					"linkedService2_clusterPassword": {
+						"value": "[parameters('linkedService2_clusterPassword')]"
+					},
+					"linkedService2_clusterSshPassword": {
+						"value": "[parameters('linkedService2_clusterSshPassword')]"
+					},
+					"linkedService2_servicePrincipalKey": {
+						"value": "[parameters('linkedService2_servicePrincipalKey')]"
+					},
 					"linkedService_hdinsightBYOC_password": {
 						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
+					},
+					"OnDemandHDInsightConnection_clusterPassword": {
+						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
+					},
+					"OnDemandHDInsightConnection_clusterSshPassword": {
+						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
+					},
+					"OnDemandHDInsightConnection_servicePrincipalKey": {
+						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
 					},
 					"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 						"value": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]"
@@ -157,8 +250,41 @@
 					"hdiOnDemand_ls_properties_typeProperties_tenant": {
 						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_tenant')]"
 					},
+					"linkedService1_properties_typeProperties_userName": {
+						"value": "[parameters('linkedService1_properties_typeProperties_userName')]"
+					},
+					"linkedService2_properties_typeProperties_hostSubscriptionId": {
+						"value": "[parameters('linkedService2_properties_typeProperties_hostSubscriptionId')]"
+					},
+					"linkedService2_properties_typeProperties_clusterResourceGroup": {
+						"value": "[parameters('linkedService2_properties_typeProperties_clusterResourceGroup')]"
+					},
+					"linkedService2_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('linkedService2_properties_typeProperties_servicePrincipalId')]"
+					},
+					"linkedService2_properties_typeProperties_tenant": {
+						"value": "[parameters('linkedService2_properties_typeProperties_tenant')]"
+					},
+					"linkedService2_properties_typeProperties_clusterUserName": {
+						"value": "[parameters('linkedService2_properties_typeProperties_clusterUserName')]"
+					},
+					"linkedService2_properties_typeProperties_clusterSshUserName": {
+						"value": "[parameters('linkedService2_properties_typeProperties_clusterSshUserName')]"
+					},
 					"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 						"value": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]"
 					}
 				}
 			},

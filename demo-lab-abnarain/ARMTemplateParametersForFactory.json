@@ -20,10 +20,31 @@
 		"hdiOnDemand_storage_ls_connectionString": {
 			"value": ""
 		},
+		"linkedService1_password": {
+			"value": ""
+		},
+		"linkedService2_clusterPassword": {
+			"value": ""
+		},
+		"linkedService2_clusterSshPassword": {
+			"value": ""
+		},
+		"linkedService2_servicePrincipalKey": {
+			"value": ""
+		},
 		"linkedService_hdinsightBYOC_password": {
 			"value": ""
 		},
 		"sinkBlob_LS_connectionString": {
+			"value": ""
+		},
+		"OnDemandHDInsightConnection_clusterPassword": {
+			"value": ""
+		},
+		"OnDemandHDInsightConnection_clusterSshPassword": {
+			"value": ""
+		},
+		"OnDemandHDInsightConnection_servicePrincipalKey": {
 			"value": ""
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
@@ -56,8 +77,41 @@
 		"hdiOnDemand_ls_properties_typeProperties_tenant": {
 			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
+		"linkedService1_properties_typeProperties_userName": {
+			"value": "asA"
+		},
+		"linkedService2_properties_typeProperties_hostSubscriptionId": {
+			"value": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"linkedService2_properties_typeProperties_clusterResourceGroup": {
+			"value": "ADF-BOT"
+		},
+		"linkedService2_properties_typeProperties_servicePrincipalId": {
+			"value": "ewr"
+		},
+		"linkedService2_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"linkedService2_properties_typeProperties_clusterUserName": {
+			"value": "wewe"
+		},
+		"linkedService2_properties_typeProperties_clusterSshUserName": {
+			"value": "as"
+		},
 		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 			"value": "admin"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+			"value": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+			"value": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+			"value": "dsf"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		}
 	}
 }
