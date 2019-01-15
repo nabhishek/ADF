@@ -1,10 +1,10 @@
 {
 	"name": "Process data using on-demand HDInsight",
 	"properties": {
-		"description": "A simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
+		"description": "Use the template to create a simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
 		"activities": [
 			{
-				"name": "processData",
+				"name": "ProcessData",
 				"description": "PySpark application for counting words in a document.",
 				"type": "HDInsightSpark",
 				"policy": {
