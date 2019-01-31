@@ -919,7 +919,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Until1",
+						"name": "Iterate all users",
 						"type": "Until",
 						"dependsOn": [],
 						"userProperties": [],
@@ -959,7 +959,8 @@
 										{
 											"activity": "Get ID",
 											"dependencyConditions": [
-												"Succeeded"
+												"Succeeded",
+												"Failed"
 											]
 										}
 									],
@@ -987,6 +988,12 @@
 									"type": "SetVariable",
 									"dependsOn": [
 										{
+											"activity": "Get ID",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
 											"activity": "Get Item using ID",
 											"dependencyConditions": [
 												"Succeeded"
@@ -1001,6 +1008,30 @@
 											"type": "Expression"
 										}
 									}
+								},
+								{
+									"name": "stop",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Get ID",
+											"dependencyConditions": [
+												"Failed",
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "Get Item using ID",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "val",
+										"value": "true"
+									}
 								}
 							],
 							"timeout": "7.00:00:00"
@@ -1014,7 +1045,7 @@
 					},
 					"count": {
 						"type": "String",
-						"defaultValue": "2"
+						"defaultValue": "1"
 					}
 				},
 				"annotations": []
