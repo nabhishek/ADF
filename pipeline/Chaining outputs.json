@@ -1,0 +1,93 @@
+{
+	"name": "Chaining outputs",
+	"properties": {
+		"activities": [
+			{
+				"name": "Until1",
+				"type": "Until",
+				"typeProperties": {
+					"expression": {
+						"value": "@variables('val')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get ID",
+							"type": "WebActivity",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"url": {
+									"value": "@concat('https://reqres.in/api/users/',variables('count'))",
+									"type": "Expression"
+								},
+								"method": "GET"
+							}
+						},
+						{
+							"name": "Get Item using ID",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Get ID",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"url": {
+									"value": "@concat('https://reqres.in/api/users/',string(add(activity('Get ID').output.data.id,1)))",
+									"type": "Expression"
+								},
+								"method": "GET"
+							}
+						},
+						{
+							"name": "increment",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get Item using ID",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"typeProperties": {
+								"variableName": "count",
+								"value": {
+									"value": "@string(add(activity('Get ID').output.data.id,1))",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			}
+		],
+		"variables": {
+			"val": {
+				"type": "Boolean",
+				"defaultValue": false
+			},
+			"count": {
+				"type": "String",
+				"defaultValue": "2"
+			}
+		}
+	}
+}
