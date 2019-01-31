@@ -14,14 +14,6 @@
 						{
 							"name": "Get ID",
 							"type": "WebActivity",
-							"dependsOn": [
-								{
-									"activity": "increment",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -67,6 +59,20 @@
 						{
 							"name": "increment",
 							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get ID",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Get Item using ID",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"typeProperties": {
 								"variableName": "count",
 								"value": {
@@ -82,7 +88,8 @@
 								{
 									"activity": "Get ID",
 									"dependencyConditions": [
-										"Failed"
+										"Failed",
+										"Succeeded"
 									]
 								},
 								{
