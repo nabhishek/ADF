@@ -7,9 +7,33 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "demo-lab-abnarain"
 		},
+		"AmazonS31_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS31'"
+		},
+		"AzureDataLakeStorageGen2_ls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_ls'"
+		},
 		"AzureDatabricks_LS_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
+		},
+		"AzureDatabricks_jobCluster_LS_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_jobCluster_LS'"
+		},
+		"OnDemandHDInsightConnection_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
 		},
 		"hdiOnDemand_ls_clusterPassword": {
 			"type": "secureString",
@@ -51,17 +75,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
-		"OnDemandHDInsightConnection_clusterPassword": {
-			"type": "secureString",
-			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
-		},
-		"OnDemandHDInsightConnection_clusterSshPassword": {
-			"type": "secureString",
-			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
-		},
-		"OnDemandHDInsightConnection_servicePrincipalKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
+		"DataDestinationStore1_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adflab"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
@@ -86,6 +102,30 @@
 		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "data/source"
+		},
+		"AmazonS31_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAI7PF6C2LJQ2X75VA"
+		},
+		"AzureDataLakeStorageGen2_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://abnarainadlsgen2sink.dfs.core.windows.net"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "dsf"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
 		"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
 			"type": "string",
@@ -135,22 +175,6 @@
 			"type": "string",
 			"defaultValue": "admin"
 		},
-		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
-			"type": "string",
-			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
-			"type": "string",
-			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
-			"type": "string",
-			"defaultValue": "dsf"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -178,14 +202,32 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AmazonS31_secretAccessKey": {
+						"value": "[parameters('AmazonS31_secretAccessKey')]"
+					},
+					"AzureDataLakeStorageGen2_ls_accountKey": {
+						"value": "[parameters('AzureDataLakeStorageGen2_ls_accountKey')]"
+					},
 					"AzureDatabricks_LS_accessToken": {
 						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
+					},
+					"AzureDatabricks_jobCluster_LS_accessToken": {
+						"value": "[parameters('AzureDatabricks_jobCluster_LS_accessToken')]"
 					},
 					"hdiOnDemand_storage_ls_connectionString": {
 						"value": "[parameters('hdiOnDemand_storage_ls_connectionString')]"
 					},
 					"sinkBlob_LS_connectionString": {
 						"value": "[parameters('sinkBlob_LS_connectionString')]"
+					},
+					"OnDemandHDInsightConnection_clusterPassword": {
+						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
+					},
+					"OnDemandHDInsightConnection_clusterSshPassword": {
+						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
+					},
+					"OnDemandHDInsightConnection_servicePrincipalKey": {
+						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
 					},
 					"hdiOnDemand_ls_clusterPassword": {
 						"value": "[parameters('hdiOnDemand_ls_clusterPassword')]"
@@ -211,14 +253,14 @@
 					"linkedService_hdinsightBYOC_password": {
 						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
 					},
-					"OnDemandHDInsightConnection_clusterPassword": {
-						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
+					"AmazonS31_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]"
 					},
-					"OnDemandHDInsightConnection_clusterSshPassword": {
-						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
+					"AzureDataLakeStorageGen2_ls_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorageGen2_ls_properties_typeProperties_url')]"
 					},
-					"OnDemandHDInsightConnection_servicePrincipalKey": {
-						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
+					"DataDestinationStore1_properties_typeProperties_folderPath": {
+						"value": "[parameters('DataDestinationStore1_properties_typeProperties_folderPath')]"
 					},
 					"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 						"value": "[parameters('sinkRawFiles_Dataset_properties_typeProperties_fileName')]"
@@ -237,6 +279,18 @@
 					},
 					"sourceFiles_Dataset_properties_typeProperties_folderPath": {
 						"value": "[parameters('sourceFiles_Dataset_properties_typeProperties_folderPath')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]"
+					},
+					"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]"
 					},
 					"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
 						"value": "[parameters('hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId')]"
@@ -273,22 +327,30 @@
 					},
 					"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 						"value": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]"
-					},
-					"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
-						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]"
-					},
-					"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
-						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]"
-					},
-					"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
-						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]"
-					},
-					"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
-						"value": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]"
 					}
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
 		}
 	]
 }

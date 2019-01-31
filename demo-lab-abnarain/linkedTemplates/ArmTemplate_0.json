@@ -7,9 +7,21 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "demo-lab-abnarain"
 		},
+		"AmazonS31_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS31'"
+		},
+		"AzureDataLakeStorageGen2_ls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageGen2_ls'"
+		},
 		"AzureDatabricks_LS_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_LS'"
+		},
+		"AzureDatabricks_jobCluster_LS_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks_jobCluster_LS'"
 		},
 		"hdiOnDemand_storage_ls_connectionString": {
 			"type": "secureString",
@@ -18,6 +30,18 @@
 		"sinkBlob_LS_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
+		},
+		"OnDemandHDInsightConnection_clusterPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_clusterSshPassword": {
+			"type": "secureString",
+			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
+		},
+		"OnDemandHDInsightConnection_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
 		},
 		"hdiOnDemand_ls_clusterPassword": {
 			"type": "secureString",
@@ -51,17 +75,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService_hdinsightBYOC'"
 		},
-		"OnDemandHDInsightConnection_clusterPassword": {
-			"type": "secureString",
-			"metadata": "Secure string for 'clusterPassword' of 'OnDemandHDInsightConnection'"
+		"AmazonS31_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAI7PF6C2LJQ2X75VA"
 		},
-		"OnDemandHDInsightConnection_clusterSshPassword": {
-			"type": "secureString",
-			"metadata": "Secure string for 'clusterSshPassword' of 'OnDemandHDInsightConnection'"
+		"AzureDataLakeStorageGen2_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://abnarainadlsgen2sink.dfs.core.windows.net"
 		},
-		"OnDemandHDInsightConnection_servicePrincipalKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'servicePrincipalKey' of 'OnDemandHDInsightConnection'"
+		"DataDestinationStore1_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adflab"
 		},
 		"sinkRawFiles_Dataset_properties_typeProperties_fileName": {
 			"type": "string",
@@ -86,6 +110,22 @@
 		"sourceFiles_Dataset_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "data/source"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
+			"type": "string",
+			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "dsf"
+		},
+		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		},
 		"hdiOnDemand_ls_properties_typeProperties_hostSubscriptionId": {
 			"type": "string",
@@ -134,28 +174,47 @@
 		"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "admin"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId": {
-			"type": "string",
-			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup": {
-			"type": "string",
-			"defaultValue": "7b68d2b5-dfbe-46e1-938f-98ed143b7953"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId": {
-			"type": "string",
-			"defaultValue": "dsf"
-		},
-		"OnDemandHDInsightConnection_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AmazonS31')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AmazonS3",
+				"typeProperties": {
+					"serviceUrl": "",
+					"accessKeyId": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]",
+					"secretAccessKey": {
+						"type": "SecureString",
+						"value": "[parameters('AmazonS31_secretAccessKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageGen2_ls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageGen2_ls_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorageGen2_ls_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -171,6 +230,27 @@
 						"value": "[parameters('AzureDatabricks_LS_accessToken')]"
 					},
 					"existingClusterId": "0320-025440-yes123"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks_jobCluster_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://eastus.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricks_jobCluster_LS_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "1:2",
+					"newClusterVersion": "5.0.x-scala2.11",
+					"newClusterEnableElasticDisk": true
 				}
 			},
 			"dependsOn": []
@@ -215,6 +295,164 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Chaining outputs')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Until1",
+						"type": "Until",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@variables('val')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Get ID",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://reqres.in/api/users/',variables('count'))",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {},
+										"linkedServices": [],
+										"datasets": []
+									}
+								},
+								{
+									"name": "Get Item using ID",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "Get ID",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@concat('https://reqres.in/api/users/',string(add(activity('Get ID').output.data.id,1)))",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {},
+										"linkedServices": [],
+										"datasets": []
+									}
+								},
+								{
+									"name": "increment",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Get Item using ID",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "count",
+										"value": {
+											"value": "@string(add(activity('Get ID').output.data.id,1))",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"timeout": "7.00:00:00"
+						}
+					}
+				],
+				"variables": {
+					"val": {
+						"type": "Boolean",
+						"defaultValue": false
+					},
+					"count": {
+						"type": "String",
+						"defaultValue": "2"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataDestinationStore1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection to your Azure Data Lake Store.",
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageGen2_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlobFSFile",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"folderPath": "[parameters('DataDestinationStore1_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageGen2_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataSourceStore1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection your Amazon S3 store.",
+				"linkedServiceName": {
+					"referenceName": "AmazonS31",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AmazonS3Object",
+				"typeProperties": {
+					"bucketName": "adflab"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AmazonS31')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/sinkRawFiles_Dataset')]",
@@ -286,6 +524,49 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sourceBlob_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnDemandHDInsightConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "On-demand HDInsight cluster created by ADF for the PySpark application execution. Please ensure you configure an appropriate AAD service principal. In this example, use the same storage account for both on-demand HDI and the resource files for simplicity.",
+				"annotations": [],
+				"type": "HDInsightOnDemand",
+				"typeProperties": {
+					"clusterType": "hadoop",
+					"clusterSize": 4,
+					"timeToLive": "00:05:00",
+					"version": "3.6",
+					"hostSubscriptionId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]",
+					"clusterResourceGroup": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]",
+					"servicePrincipalId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]",
+					"tenant": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]",
+					"clusterNamePrefix": "",
+					"clusterPassword": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
+					},
+					"clusterSshPassword": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
+					},
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
+					},
+					"linkedServiceName": {
+						"referenceName": "hdiOnDemand_storage_ls",
+						"type": "LinkedServiceReference"
+					},
+					"headNodeSize": "",
+					"dataNodeSize": "",
+					"zookeeperNodeSize": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
 			]
 		},
 		{
@@ -445,46 +726,57 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OnDemandHDInsightConnection')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/CopyData_from_Amazon_S3_to_AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "On-demand HDInsight cluster created by ADF for the PySpark application execution. Please ensure you configure an appropriate AAD service principal. In this example, use the same storage account for both on-demand HDI and the resource files for simplicity.",
-				"annotations": [],
-				"type": "HDInsightOnDemand",
-				"typeProperties": {
-					"clusterType": "hadoop",
-					"clusterSize": 4,
-					"timeToLive": "00:05:00",
-					"version": "3.6",
-					"hostSubscriptionId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_hostSubscriptionId')]",
-					"clusterResourceGroup": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_clusterResourceGroup')]",
-					"servicePrincipalId": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_servicePrincipalId')]",
-					"tenant": "[parameters('OnDemandHDInsightConnection_properties_typeProperties_tenant')]",
-					"clusterNamePrefix": "",
-					"clusterPassword": {
-						"type": "SecureString",
-						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
-					},
-					"clusterSshPassword": {
-						"type": "SecureString",
-						"value": "[parameters('OnDemandHDInsightConnection_clusterSshPassword')]"
-					},
-					"servicePrincipalKey": {
-						"type": "SecureString",
-						"value": "[parameters('OnDemandHDInsightConnection_servicePrincipalKey')]"
-					},
-					"linkedServiceName": {
-						"referenceName": "hdiOnDemand_storage_ls",
-						"type": "LinkedServiceReference"
-					},
-					"headNodeSize": "",
-					"dataNodeSize": "",
-					"zookeeperNodeSize": ""
-				}
+				"description": "Copy data from Amazon S3 to Azure Data Lake Storage.\n\nYou can also go to \"Copy Data Tool\" to get the pipeline for more connectors and scenarios.",
+				"activities": [
+					{
+						"name": "AmazonS3_to_Azure",
+						"description": "Copy data from Amazon S3 to Azure Data Lake Storage.",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "FileSystemSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "AzureBlobFSSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "DataSourceStore1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DataDestinationStore1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]"
+				"[concat(variables('factoryId'), '/datasets/DataSourceStore1')]",
+				"[concat(variables('factoryId'), '/datasets/DataDestinationStore1')]"
 			]
 		},
 		{
@@ -633,100 +925,6 @@
 				"[concat(variables('factoryId'), '/datasets/sourceFiles_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/sinkRawFiles_Dataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Transform data using on-demand HDInsight')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Use the template to create a simple word count PySpark application which counts the number of words in a document and outputs the value in a text file. \n",
-				"activities": [
-					{
-						"name": "ProcessData",
-						"description": "PySpark application for counting words in a document.",
-						"type": "HDInsightSpark",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"rootPath": "adftutorial/spark/script",
-							"entryFilePath": "WordCount_Spark.py",
-							"arguments": [
-								"@pipeline().RunId"
-							],
-							"getDebugInfo": "Always",
-							"sparkConfig": {
-								"runid": {
-									"value": "@pipeline().RunId",
-									"type": "Expression"
-								}
-							},
-							"sparkJobLinkedService": {
-								"referenceName": "hdiOnDemand_storage_ls",
-								"type": "LinkedServiceReference"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "OnDemandHDInsightConnection",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
-				"[concat(variables('factoryId'), '/linkedServices/OnDemandHDInsightConnection')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Spark1",
-						"type": "HDInsightSpark",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"rootPath": "adftutorial/spark/script",
-							"entryFilePath": "WordCount_Spark2.py",
-							"arguments": [
-								"@pipeline().RunId"
-							],
-							"getDebugInfo": "Always",
-							"sparkJobLinkedService": {
-								"referenceName": "hdiOnDemand_storage_ls",
-								"type": "LinkedServiceReference"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "linkedService_hdinsightBYOC",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
-				"[concat(variables('factoryId'), '/linkedServices/linkedService_hdinsightBYOC')]"
 			]
 		}
 	]
