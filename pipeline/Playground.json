@@ -1,10 +1,10 @@
 {
-	"name": "pipeline1",
+	"name": "Playground",
 	"properties": {
 		"activities": [
 			{
-				"name": "Spark1",
-				"type": "HDInsightSpark",
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -13,19 +13,10 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"rootPath": "adftutorial/spark/script",
-					"entryFilePath": "WordCount_Spark2.py",
-					"arguments": [
-						"@pipeline().RunId"
-					],
-					"getDebugInfo": "Always",
-					"sparkJobLinkedService": {
-						"referenceName": "hdiOnDemand_storage_ls",
-						"type": "LinkedServiceReference"
-					}
+					"notebookPath": "/adftutorial/Transformations (update)"
 				},
 				"linkedServiceName": {
-					"referenceName": "linkedService_hdinsightBYOC",
+					"referenceName": "Del_AzureDatabricks1",
 					"type": "LinkedServiceReference"
 				}
 			}
