@@ -76,7 +76,7 @@
 							"typeProperties": {
 								"variableName": "count",
 								"value": {
-									"value": "@string(add(activity('Get ID').output.data.id,1))",
+									"value": "@string(add(activity('Get ID').output.data.id,2))",
 									"type": "Expression"
 								}
 							}
@@ -88,8 +88,7 @@
 								{
 									"activity": "Get ID",
 									"dependencyConditions": [
-										"Failed",
-										"Succeeded"
+										"Failed"
 									]
 								},
 								{
