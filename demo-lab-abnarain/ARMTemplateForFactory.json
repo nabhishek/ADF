@@ -75,6 +75,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
+		"del_AzureSqlDW1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'del_AzureSqlDW1'"
+		},
 		"DataDestinationStore1_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "adflab"
@@ -568,14 +572,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/Playground')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Spark1",
-						"type": "HDInsightSpark",
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -586,19 +590,10 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"rootPath": "adftutorial/spark/script",
-							"entryFilePath": "WordCount_Spark2.py",
-							"arguments": [
-								"@pipeline().RunId"
-							],
-							"getDebugInfo": "Always",
-							"sparkJobLinkedService": {
-								"referenceName": "hdiOnDemand_storage_ls",
-								"type": "LinkedServiceReference"
-							}
+							"notebookPath": "/adftutorial/Transformations (update)"
 						},
 						"linkedServiceName": {
-							"referenceName": "linkedService_hdinsightBYOC",
+							"referenceName": "Del_AzureDatabricks1",
 							"type": "LinkedServiceReference"
 						}
 					}
@@ -606,8 +601,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/hdiOnDemand_storage_ls')]",
-				"[concat(variables('factoryId'), '/linkedServices/linkedService_hdinsightBYOC')]"
+				"[concat(variables('factoryId'), '/linkedServices/Del_AzureDatabricks1')]"
 			]
 		},
 		{
@@ -1043,6 +1037,65 @@
 				"typeProperties": {
 					"sasUri": "**********?**********"
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/del_AzureSqlDW1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"server": {
+						"type": "String",
+						"defaultValue": "ab-server.abc.com"
+					},
+					"db_name": {
+						"type": "String",
+						"defaultValue": "user_db"
+					},
+					"user": {
+						"type": "String",
+						"defaultValue": "ab"
+					},
+					"secret": {
+						"type": "String",
+						"defaultValue": "value"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('del_AzureSqlDW1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Del_AzureDatabricks1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "AzureDatabricks",
+				"parameters": {
+					"clusterVersion": {
+						"type": "String",
+						"defaultValue": "4.0.x-scala2.11"
+					},
+					"ClusterNodeType": {
+						"type": "String",
+						"defaultValue": "Standard_D3_v2"
+					}
+				},
+				"typeProperties": {
+					"domain": "https://eastus.azuredatabricks.net",
+					"newClusterNodeType": "@{linkedService().ClusterNodeType}",
+					"newClusterNumOfWorker": "1:2",
+					"newClusterVersion": "@{linkedService().clusterVersion}",
+					"newClusterEnableElasticDisk": true,
+					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRFTU8tTEFCLUFCTkFSQUlOX2Q3ZDc5OWQxLWI0MzQtNDdmNC1hNzYwLWRiYzQxMzNhMzYxMyINCn0="
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		}

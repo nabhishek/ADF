@@ -56,6 +56,9 @@
 		"sinkBlob_LS_connectionString": {
 			"value": ""
 		},
+		"del_AzureSqlDW1_connectionString": {
+			"value": ""
+		},
 		"DataDestinationStore1_properties_typeProperties_folderPath": {
 			"value": "adflab"
 		},

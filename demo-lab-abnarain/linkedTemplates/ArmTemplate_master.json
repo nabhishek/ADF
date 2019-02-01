@@ -75,6 +75,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'sinkBlob_LS'"
 		},
+		"del_AzureSqlDW1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'del_AzureSqlDW1'"
+		},
 		"DataDestinationStore1_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "adflab"
@@ -220,6 +224,9 @@
 					"sinkBlob_LS_connectionString": {
 						"value": "[parameters('sinkBlob_LS_connectionString')]"
 					},
+					"del_AzureSqlDW1_connectionString": {
+						"value": "[parameters('del_AzureSqlDW1_connectionString')]"
+					},
 					"OnDemandHDInsightConnection_clusterPassword": {
 						"value": "[parameters('OnDemandHDInsightConnection_clusterPassword')]"
 					},
@@ -249,9 +256,6 @@
 					},
 					"linkedService2_servicePrincipalKey": {
 						"value": "[parameters('linkedService2_servicePrincipalKey')]"
-					},
-					"linkedService_hdinsightBYOC_password": {
-						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
 					},
 					"AmazonS31_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('AmazonS31_properties_typeProperties_accessKeyId')]"
@@ -324,9 +328,6 @@
 					},
 					"linkedService2_properties_typeProperties_clusterSshUserName": {
 						"value": "[parameters('linkedService2_properties_typeProperties_clusterSshUserName')]"
-					},
-					"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
-						"value": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -345,6 +346,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"linkedService_hdinsightBYOC_password": {
+						"value": "[parameters('linkedService_hdinsightBYOC_password')]"
+					},
+					"linkedService_hdinsightBYOC_properties_typeProperties_userName": {
+						"value": "[parameters('linkedService_hdinsightBYOC_properties_typeProperties_userName')]"
 					}
 				}
 			},
