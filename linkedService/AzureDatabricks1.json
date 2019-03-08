@@ -10,7 +10,7 @@
 			},
 			"registratorValue": {
 				"type": "String",
-				"defaultValue": "my.package"
+				"defaultValue": "some.package"
 			}
 		},
 		"typeProperties": {
