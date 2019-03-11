@@ -1,0 +1,9 @@
+{
+	"name": "AzureKeyVault_LinkedService",
+	"properties": {
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://keyvault-abnarain.vault.azure.net/"
+		}
+	}
+}
