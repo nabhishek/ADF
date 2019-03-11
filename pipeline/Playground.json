@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
-				"type": "DatabricksNotebook",
+				"name": "Jar1",
+				"type": "DatabricksSparkJar",
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -13,13 +13,41 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/adftutorial/Transformations (update)"
+					"parameters": [
+						"testP1",
+						"testP2"
+					],
+					"libraries": [
+						{
+							"jar": "dbfs:/store/mylib.jar"
+						}
+					]
 				},
 				"linkedServiceName": {
-					"referenceName": "Del_AzureDatabricks1",
-					"type": "LinkedServiceReference"
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"speculationValue": {
+							"value": "@pipeline().parameters.spec",
+							"type": "Expression"
+						},
+						"registratorValue": {
+							"value": "@pipeline().parameters.regitrator",
+							"type": "Expression"
+						}
+					}
 				}
 			}
-		]
+		],
+		"parameters": {
+			"spec": {
+				"type": "String",
+				"defaultValue": "false"
+			},
+			"regitrator": {
+				"type": "String",
+				"defaultValue": "my.package.MyRegistrator"
+			}
+		}
 	}
 }
