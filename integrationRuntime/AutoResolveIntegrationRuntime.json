@@ -4,8 +4,8 @@
 		"type": "Managed",
 		"typeProperties": {
 			"computeProperties": {
-				"location": "Australia Southeast",
-				"dataFlowRuntime": {
+				"location": "AutoResolve",
+				"dataFlowProperties": {
 					"computeType": "General",
 					"coreCount": 8,
 					"timeToLiveInMinutes": 60
