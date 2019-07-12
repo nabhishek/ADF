@@ -1,0 +1,124 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name"
+		},
+		"AzureSqlDatabase1": {
+			"type": "string"
+		},
+		"AzureDatabricks3_in_vnet": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/call Sproc')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup - SProc",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderStoredProcedureName": "[[SalesLT].[customerRowCount2]"
+							},
+							"dataset": {
+								"referenceName": "AzureSql_Dataset",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Lookup - SProc",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Databricks in VNet",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSql_Dataset')]",
+				"[concat(variables('factoryId'), '/pipelines/Databricks in VNet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSql_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('AzureSqlDatabase1')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Databricks in VNet')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Notebook1",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/narain.abhishek@live.in/Quick Start Using Python"
+						},
+						"linkedServiceName": {
+							"referenceName": "[parameters('AzureDatabricks3_in_vnet')]",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
